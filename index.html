@@ -115,8 +115,8 @@
         .main-header {
             background-color: var(--color-surface);
             box-shadow: var(--shadow-sm);
-            position: sticky;
-            top: 0;
+/*             position: sticky;
+ */            top: 0;
             z-index: 100;
             padding: 1rem 0;
         }
@@ -125,7 +125,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1rem;
+            gap: 0rem;
         }
 
         .logo-area {
@@ -528,6 +528,12 @@
         }
         
         .print-price-text { display: none; }
+        @media (max-width:780px) {
+            .ocult{
+                display: none !important;
+            }
+            
+        }
     </style>
 </head>
 <body>
@@ -546,7 +552,7 @@
             </div>
             
             <div class="header-actions">
-                <button class="btn btn-primary" id="btnDownload" aria-label="Baixar panfleto em imagem">
+                <button class="btn btn-primary ocult" id="btnDownload" aria-label="Baixar panfleto em imagem">
                     📸 Baixar como PNG
                 </button>
             </div>
@@ -617,21 +623,50 @@
     <!-- LÓGICA JAVASCRIPT (VANILLA JS) -->
     <script>
         /**
-         * 1. INTEGRAÇÃO BACKEND (Google Sheets CSV)
+         * 1. INTEGRAÇÃO BACKEND E CACHE
          */
         async function fetchRealData() {
-            // URL da sua planilha em formato CSV
-            const idSheat = '11OMF3qMcynVHawfnrt3fjSGnxbuzfXOteMrOGKPK6-w';
-            const sheetUrl = `https://docs.google.com/spreadsheets/d/${idSheat}/export?format=csv`;
+            // Configurações do Cache (1 hora = 3600000 milissegundos)
+            const CACHE_KEY = 'cantinho_roca_dados';
+            const CACHE_TIME_KEY = 'cantinho_roca_hora';
+            const CACHE_DURATION = 60 * 60 * 1000; 
+
+            // 1. Tenta carregar do cache do navegador
+            const savedData = localStorage.getItem(CACHE_KEY);
+            const savedTime = localStorage.getItem(CACHE_TIME_KEY);
+            const now = new Date().getTime();
+
+            // Se o cache existe e a diferença de tempo for menor que 1 hora, usa o cache
+            if (savedData && savedTime && (now - parseInt(savedTime)) < CACHE_DURATION) {
+                console.log('Carregamento ultra-rápido: Dados puxados do cache local.');
+                return JSON.parse(savedData);
+            }
+
+            // 2. Se não tem cache ou expirou (passou de 1h), busca da planilha do Google
+            const sheetUrl = 'https://docs.google.com/spreadsheets/d/11OMF3qMcynVHawfnrt3fjSGnxbuzfXOteMrOGKPK6-w/export?format=csv';
             
             try {
+                console.log('Buscando dados atualizados da planilha...');
                 const response = await fetch(sheetUrl);
                 if (!response.ok) throw new Error('Falha ao carregar a planilha.');
                 
                 const csvText = await response.text();
-                return parseCSV(csvText);
+                const parsedData = parseCSV(csvText);
+
+                // 3. Salva os dados novos e a hora atual no cache do usuário
+                localStorage.setItem(CACHE_KEY, JSON.stringify(parsedData));
+                localStorage.setItem(CACHE_TIME_KEY, now.toString());
+
+                return parsedData;
             } catch (error) {
-                console.error("Erro ao carregar dados da planilha. Mostrando lista vazia de segurança:", error);
+                console.error("Erro ao buscar do Google:", error);
+                
+                // Sistema de segurança (Fallback): Se a internet oscilar ou o Google falhar,
+                // mostra o folheto desatualizado que está no cache em vez de uma tela vazia.
+                if (savedData) {
+                    console.log('Carregando cache antigo por falha na rede.');
+                    return JSON.parse(savedData);
+                }
                 return []; 
             }
         }
