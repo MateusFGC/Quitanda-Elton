@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Confira as melhores ofertas e promoções de hortifruti frescos no Cantinho da Roça. Qualidade e preço baixo direto para sua mesa!">
+    <title>Ofertas da Semana | Cantinho da Roça</title>
+    
+    <!-- Biblioteca para converter a página HTML em uma Imagem PNG -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        /* ==========================================================================
+           1. VARIÁVEIS CSS E RESET
+           ========================================================================== */
+        :root {
+            --color-primary: #43704c;    /* Verde Folha Suave (Estilo Mercado) */
+            --color-secondary: #d59a42;  /* Laranja/Mostarda Queimado (Estilo Etiqueta) */
+            --color-danger: #c13c37;     /* Vermelho Tomate (Oferta impressa) */
+            --color-bg: #f4f1ea;         /* Fundo quente, lembrando papel de encarte */
+            --color-surface: #ffffff;
+            --color-text: #444444;       /* Cinza escuro ao invés de preto puro (tinta) */
+            --color-text-muted: #7a7a7a;
+            
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 12px rgba(0,0,0,0.12);
+            
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        a { text-decoration: none; }
+
+        /* ==========================================================================
+           2. COMPONENTES GERAIS (Mobile-First)
+           ========================================================================== */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-small {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.75rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--color-primary);
+            color: var(--color-surface);
+        }
+        
+        .btn-outline-light {
+            background: transparent;
+            border: 2px solid var(--color-surface);
+            color: var(--color-surface);
+        }
+        
+        .btn-outline-light:hover {
+            background: var(--color-surface);
+            color: var(--color-primary);
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-surface);
+        }
+
+        .btn-primary:hover {
+            background: #1e4b29;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ==========================================================================
+           3. HEADER
+           ========================================================================== */
+        .main-header {
+            background-color: var(--color-surface);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 0;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .logo span { color: var(--color-secondary); }
+
+        .header-address {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            margin-top: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+        }
+        
+        .header-actions .btn { flex: 1; }
+
+        @media (min-width: 768px) {
+            .header-content {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            .header-address {
+                flex-direction: row;
+            }
+            .logo-area {
+                align-items: flex-start;
+            }
+            .header-actions {
+                width: auto;
+            }
+        }
+
+        /* ==========================================================================
+           4. SEÇÕES PRINCIPAIS (Layout Hieraquico)
+           ========================================================================== */
+        main {
+            padding: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background-color: var(--color-primary);
+            border-radius: 2px;
+        }
+
+        .grid-container {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+
+        /* ==========================================================================
+           5. COMPONENTES: CARDS (Artigos)
+           ========================================================================== */
+        .product-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #e2ded5; 
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #eee;
+        }
+
+        .product-content {
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-text);
+        }
+
+        .product-price-box {
+            margin-top: auto;
+            margin-bottom: 1rem;
+        }
+
+        .price-label {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+        }
+
+        .price-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--color-primary);
+            line-height: 1;
+        }
+
+        .price-currency { font-size: 1.2rem; vertical-align: top; }
+
+        .product-select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: var(--radius-md);
+            background-color: var(--color-bg);
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem top 50%;
+            background-size: 0.65rem auto;
+        }
+
+        /* --- VARIANTE: OFERTA (Destaque Principal) --- */
+        .section-ofertas .product-card {
+            border: 3px solid var(--color-danger);
+            position: relative;
+        }
+
+        .section-ofertas .product-card::before {
+            content: 'OFERTA';
+            position: absolute;
+            top: 10px;
+            right: -30px;
+            background: var(--color-danger);
+            color: white;
+            padding: 5px 30px;
+            font-weight: bold;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .section-ofertas .price-value {
+            color: var(--color-danger);
+            font-size: 2.8rem;
+        }
+
+        .section-ofertas .product-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .section-ofertas .grid-container {
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        }
+
+        /* --- VARIANTE: CONVENCIONAL (Rodapé/Sóbrio) --- */
+        .section-convencionais {
+            background-color: #e8e4db;
+            padding: 2rem 0;
+            border-radius: var(--radius-lg);
+        }
+
+        .section-convencionais .product-card {
+            flex-direction: row;
+            align-items: center;
+            box-shadow: none;
+            border: 1px solid #d4cfc4;
+        }
+
+        .section-convencionais .product-image {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-md) 0 0 var(--radius-md);
+        }
+
+        .section-convencionais .product-content {
+            padding: 0.8rem;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .section-convencionais .product-name {
+            font-size: 1rem;
+            margin: 0;
+            width: 30%;
+        }
+
+        .section-convencionais .price-value {
+            font-size: 1.5rem;
+        }
+
+        .section-convencionais .product-select {
+            width: auto;
+            min-width: 140px;
+        }
+        
+        .section-convencionais .grid-container {
+            grid-template-columns: 1fr;
+        }
+        
+        @media (min-width: 992px) {
+            .section-convencionais .grid-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ==========================================================================
+           6. FOOTER
+           ========================================================================== */
+        .main-footer {
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            padding: 3rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            align-items: center;
+            text-align: center;
+        }
+
+        .main-footer .logo {
+            color: var(--color-surface);
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .validity-info {
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: rgba(255,255,255,0.1);
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-address h4 {
+            color: var(--color-secondary);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-address p {
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .qr-code {
+            max-width: 140px;
+            width: 100%;
+            height: auto;
+            border-radius: var(--radius-md);
+            padding: 5px;
+            background: white;
+        }
+
+        @media (min-width: 768px) {
+            .footer-grid {
+                grid-template-columns: 1fr 2fr 1fr;
+                text-align: left;
+            }
+            .footer-center {
+                text-align: center;
+            }
+            .footer-right {
+                text-align: right;
+            }
+        }
+
+        /* ==========================================================================
+           7. MEDIA QUERIES PARA IMPRESSÃO (Folheto Digital/Físico)
+           ========================================================================== */
+        @page {
+            size: A4 portrait;
+            margin: 5mm; 
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+                font-size: 9pt; 
+            }
+            .container {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 0;
+            }
+            .main-header { padding: 0.5rem 0; position: static; box-shadow: none; }
+            .header-actions, .product-select, .btn-mapa {
+                display: none !important; /* Esconde botões de ação e mapas na impressão */
+            }
+            main { gap: 0.5rem; padding: 0; }
+            
+            .section-title { font-size: 1.2rem; margin-bottom: 0.8rem; padding-bottom: 0.2rem; }
+            
+            .product-card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+                page-break-inside: avoid;
+            }
+            .product-content { padding: 0.5rem; }
+            .product-name { font-size: 0.9rem; margin-bottom: 0.2rem; }
+            .product-image { height: 90px; } 
+            .price-label { font-size: 0.6rem; }
+            .price-value { font-size: 1.2rem; }
+            .section-ofertas .price-value { font-size: 1.6rem; }
+            .section-ofertas .product-name { font-size: 1.1rem; }
+            
+            .section-ofertas .grid-container {
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 0.5rem;
+            }
+            .grid-container {
+                grid-template-columns: repeat(5, 1fr) !important;
+                gap: 0.5rem;
+            }
+            
+            .section-convencionais {
+                background: white;
+                border-top: 2px dashed #ccc;
+                padding: 0.5rem 0;
+            }
+            .section-convencionais .grid-container {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.2rem;
+            }
+            .section-convencionais .product-card {
+                border: none;
+                border-bottom: 1px dashed #eee;
+            }
+            .section-convencionais .product-image { width: 40px; height: 40px; }
+            
+            .main-footer { padding: 0.5rem 0; margin-top: 0.5rem; }
+            .footer-grid { gap: 1rem; align-items: start; }
+            .validity-info { padding: 0.4rem 1rem; font-size: 1rem; margin-bottom: 0.5rem; }
+            .qr-code { max-width: 90px; } /* QR code menor na impressão */
+            
+            .print-price-text {
+                display: block !important;
+                font-weight: bold;
+                color: var(--color-text-muted);
+                font-size: 0.7rem;
+            }
+        }
+        
+        .print-price-text { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- CABEÇALHO -->
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo-area">
+                <div class="logo">
+                    🥬 Cantinho da <span>Roça</span>
+                </div>
+                <div class="header-address">
+                    📍 Rua São Paulo, 84B - Boa Vista
+                    <a href="https://maps.app.goo.gl/mQ2sfstUBj75GdKt8" target="_blank" class="btn btn-outline btn-small btn-mapa">🗺️ Ver no Mapa</a>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <button class="btn btn-primary" id="btnDownload" aria-label="Baixar panfleto em imagem">
+                    📸 Baixar como PNG
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="container">
+        
+        <!-- SEÇÃO 1: OFERTAS (Destaque Principal) -->
+        <section class="section-ofertas" aria-labelledby="title-ofertas">
+            <h1 id="title-ofertas" class="section-title" style="color: var(--color-danger);">🔥 Super Ofertas 🔥</h1>
+            <div class="grid-container" id="grid-ofertas">
+                <!-- Preenchido via JS -->
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: PROMOÇÕES (Tudo Junto) -->
+        <section class="section-promocoes" aria-labelledby="title-promocoes">
+            <h2 id="title-promocoes" class="section-title">Promoções da Semana</h2>
+            <div class="grid-container" id="grid-promocoes">
+                <!-- Preenchido via JS (Frutas, verduras, legumes misturados) -->
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: CONVENCIONAL (Sóbrio, Rodapé) -->
+        <section class="section-convencionais" aria-labelledby="title-convencional">
+            <div class="container">
+                <h2 id="title-convencional" class="section-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">Mais Itens</h2>
+                <div class="grid-container" id="grid-convencionais">
+                    <!-- Preenchido via JS (Frutas, verduras, legumes misturados) -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- RODAPÉ DIVIDIDO EM 3 COLUNAS -->
+    <footer class="main-footer">
+        <div class="container footer-grid">
+            
+            <!-- Esquerda: Endereço -->
+            <div class="footer-left footer-address">
+                <h4>📍 Nossa Loja</h4>
+                <p>Rua São Paulo, 84B<br>Boa Vista, Cidade - SP<br>CEP: 13486-095</p>
+                <a href="https://maps.app.goo.gl/gEfDTBUAovA26123A" target="_blank" class="btn btn-outline-light btn-mapa">🗺️ Abrir no Google Maps</a>
+            </div>
+
+            <!-- Centro: Validade e Logo -->
+            <div class="footer-center">
+                <div class="logo">🥬 Cantinho da <span>Roça</span></div>
+                <div class="validity-info" id="footer-validade">
+                    Válido de --/--/---- até --/--/----
+                </div>
+                <p style="font-size: 0.85rem; opacity: 0.9;">Imagens meramente ilustrativas. Ofertas válidas enquanto durarem os estoques.</p>
+            </div>
+
+            <!-- Direita: QR Code -->
+            <div class="footer-right">
+                <!-- A URL dentro do &data= é o que o QR code vai ler (neste caso, google.com) -->
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://google.com&color=000000&bgcolor=ffffff" alt="Escaneie para acessar o site" class="qr-code">
+                <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.9;">Acesse pelo celular</p>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- LÓGICA JAVASCRIPT (VANILLA JS) -->
+    <script>
+        /**
+         * 1. INTEGRAÇÃO BACKEND (Google Sheets CSV)
+         */
+        async function fetchRealData() {
+            // URL da sua planilha em formato CSV
+            const idSheat = '11OMF3qMcynVHawfnrt3fjSGnxbuzfXOteMrOGKPK6-w';
+            const sheetUrl = `https://docs.google.com/spreadsheets/d/${idSheat}/export?format=csv`;
+            
+            try {
+                const response = await fetch(sheetUrl);
+                if (!response.ok) throw new Error('Falha ao carregar a planilha.');
+                
+                const csvText = await response.text();
+                return parseCSV(csvText);
+            } catch (error) {
+                console.error("Erro ao carregar dados da planilha. Mostrando lista vazia de segurança:", error);
+                return []; 
+            }
+        }
+
+        // Função para transformar o Texto do CSV em Objetos JavaScript
+        function parseCSV(text) {
+            const lines = text.split('\n');
+            const result = [];
+            if (lines.length < 2) return result;
+            
+            const headers = lines[0].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(h => h.trim().replace(/^"|"$/g, ''));
+            
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue; 
+                
+                const currentline = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.trim().replace(/^"|"$/g, ''));
+                const obj = {};
+                
+                headers.forEach((header, j) => {
+                    obj[header] = currentline[j] !== undefined ? currentline[j] : '';
+                });
+                
+                result.push(obj);
+            }
+            return result;
+        }
+
+        /**
+         * 2. FUNÇÕES UTILITÁRIAS
+         */
+        function generateImagePlaceholder(nomeItem) {
+            const firstLetter = nomeItem ? nomeItem.charAt(0).toUpperCase() : 'C';
+            const cores = ['#c13c37', '#d59a42', '#528272', '#d4b46a', '#789b6b', '#a63c3a', '#d98b89'];
+            const corBg = cores[(nomeItem || "").length % cores.length];
+            
+            const svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" height="100%">
+                <rect width="100%" height="100%" fill="${corBg}"/>
+                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="120" font-family="sans-serif" font-weight="bold" fill="rgba(255,255,255,0.7)">
+                    ${firstLetter}
+                </text>
+            </svg>`;
+            return `data:image/svg+xml;base64,${btoa(svgString)}`;
+        }
+
+        function formatCurrency(valor) {
+            let valorLimpo = String(valor).replace('R$', '').trim().replace(',', '.');
+            let num = parseFloat(valorLimpo);
+            if (isNaN(num)) num = 0;
+            return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        /**
+         * 3. RENDERIZAÇÃO DA UI
+         */
+        function createProductCard(item) {
+            if (!item.Nome) return '';
+
+            const imageUrl = (item.ImagemURL && item.ImagemURL.trim() !== '') ? item.ImagemURL : generateImagePlaceholder(item.Nome);
+            const priceFormatted = formatCurrency(item.Preco);
+            
+            // Vai ler diretamente da planilha ("Kg" ou "Unidade")
+            const sizeOptionText = `${item.OpcaoTamanho || 'Unidade'} - R$ ${priceFormatted}`;
+
+            return `
+                <article class="product-card">
+                    <img src="${imageUrl}" alt="Foto de ${item.Nome}" class="product-image" loading="lazy">
+                    <div class="product-content">
+                        <h3 class="product-name">${item.Nome}</h3>
+                        <div class="product-price-box">
+                            <span class="price-label">Por Apenas</span><br>
+                            <span class="price-value"><span class="price-currency">R$</span>${priceFormatted}</span>
+                        </div>
+                        
+                        <select class="product-select" aria-label="Opções de tamanho para ${item.Nome}">
+                            <option value="${item.Preco}">${sizeOptionText}</option>
+                        </select>
+                        <span class="print-price-text">${sizeOptionText}</span>
+                    </div>
+                </article>
+            `;
+        }
+
+        function renderData(data) {
+            const domOfertas = document.getElementById('grid-ofertas');
+            const domPromocoes = document.getElementById('grid-promocoes');
+            const domConvencionais = document.getElementById('grid-convencionais');
+
+            [domOfertas, domPromocoes, domConvencionais].forEach(el => el.innerHTML = '');
+
+            data.forEach(item => {
+                if (!item.Classificacao) return; // Ignora linhas vazias
+                
+                const cardHTML = createProductCard(item);
+                const classif = item.Classificacao.toLowerCase().trim();
+
+                // Tudo junto nas seções correspondentes (ignora Fruta vs Verdura)
+                if (classif === 'oferta') {
+                    domOfertas.insertAdjacentHTML('beforeend', cardHTML);
+                } else if (classif === 'promocao') {
+                    domPromocoes.insertAdjacentHTML('beforeend', cardHTML);
+                } else if (classif === 'convencional') {
+                    domConvencionais.insertAdjacentHTML('beforeend', cardHTML);
+                }
+            });
+
+            // Pega a validade baseada na PRIMEIRA linha da planilha que tiver data preenchida
+            if (data.length > 0 && data[0].DataInicio) {
+                const txtValidade = `Válido de ${data[0].DataInicio} até ${data[0].DataFim}`;
+                document.getElementById('footer-validade').innerText = txtValidade;
+            }
+        }
+
+        /**
+         * 4. INICIALIZAÇÃO E EVENTOS
+         */
+        async function init() {
+            const data = await fetchRealData(); 
+            renderData(data);
+
+            const btnDownload = document.getElementById('btnDownload');
+            btnDownload.addEventListener('click', async () => {
+                const originalText = btnDownload.innerHTML;
+                btnDownload.innerHTML = '⏳ Gerando Imagem...';
+                btnDownload.disabled = true;
+
+                try {
+                    document.querySelector('.header-actions').style.display = 'none';
+
+                    const canvas = await html2canvas(document.body, {
+                        scale: 2, 
+                        useCORS: true, 
+                        backgroundColor: '#f4f1ea' 
+                    });
+
+                    document.querySelector('.header-actions').style.display = 'flex';
+
+                    const imgData = canvas.toDataURL('image/png');
+                    const link = document.createElement('a');
+                    link.href = imgData;
+                    link.download = 'panfleto-cantinho-da-roca.png'; 
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                } catch (error) {
+                    console.error('Erro ao gerar a imagem:', error);
+                    alert('Houve um erro ao gerar a imagem. Tente novamente.');
+                    document.querySelector('.header-actions').style.display = 'flex';
+                } finally {
+                    btnDownload.innerHTML = originalText;
+                    btnDownload.disabled = false;
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
