@@ -345,8 +345,8 @@
         }
 
         .section-convencionais .product-image {
-            width: 80px;
-            height: 80px;
+            width: 92px;
+            height: 92px;
             border-radius: var(--radius-md) 0 0 var(--radius-md);
         }
 
@@ -629,7 +629,7 @@
             // Configurações do Cache (1 hora = 3600000 milissegundos)
             const CACHE_KEY = 'cantinho_roca_dados';
             const CACHE_TIME_KEY = 'cantinho_roca_hora';
-            const CACHE_DURATION = 60 * 60 * 1000; 
+            const CACHE_DURATION = 60 * 1000; 
 
             // 1. Tenta carregar do cache do navegador
             const savedData = localStorage.getItem(CACHE_KEY);
@@ -825,4 +825,5 @@
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
+
 </html>
